@@ -93,7 +93,9 @@ exports.addOneUser=async (req,res)=>{
     try{
         let user=await userModel.create(req.body);
         const response = await userModel.updateOne({_id: user._id},{id:user._id});//add id to document(for react admin)
-        return res.send({...user,id:user._id,password:""})
+        user.id=user._id;
+        user.password="";
+        return res.send(user)
     }
     catch(err){
         console.log(err)
@@ -136,7 +138,7 @@ exports.signup=async (req,res)=>{
         if(user.password==="")//The user already exists but with google auth(google auth put googleId and put password="")
         {
             req.body.password=await bcryptPassword(req.body.password)
-            user=await userModel.findByIdAndUpdate(user._id,req.body);
+            user=await userModel.findByIdAndUpdate(user._id,req.body,{ new: true });
             let token= user.generateJWT();
             let {firstName,lastName,city,street,apartment, building, post,phone, role,active,_id,email,id}=user;//send user without password and googleId
             user={firstName,lastName,city,street,apartment, building, post,phone, role,active,_id,email,id};
@@ -147,7 +149,7 @@ exports.signup=async (req,res)=>{
      }
      else{
         let user=await userModel.create(newUser);
-        user=await userModel.findByIdAndUpdate(user._id,{id:user._id});
+        user=await userModel.findByIdAndUpdate(user._id,{id:user._id},{ new: true });
         let token= user.generateJWT();
         let {firstName,lastName,city,street,apartment, building, post,phone, role,active,_id,email,id}=user;//send user without password and googleId
         user={firstName,lastName,city,street,apartment, building, post,phone, role,active,_id,email,id};

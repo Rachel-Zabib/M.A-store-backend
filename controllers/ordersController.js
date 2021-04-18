@@ -95,7 +95,8 @@ exports.addOneOrder=async (req,res)=>{
     try{
         let order=await orderModel.create(req.body);
         const response = await orderModel.updateOne({_id: order._id},{id:order._id});//add id to document(for react admin)
-        return res.send({...order,id:order._id})
+        order.id=order._id
+        return res.send(order)
         // return res.json({error:false,message:"order Added successfully",order:order})
     }
     catch(err){

@@ -17,7 +17,7 @@ router.get("/login/google", passport.authenticate("google", {
   }));
   
   router.get("/login/google/redirect",passport.authenticate('google'),(req,res)=>{
-    res.redirect(`http://localhost:3000/token/${req.user.token}/${req.user._doc._id}`)
+    res.redirect(`http://localhost:3000/token/${req.user.token}/${req.user._id}`)
     //res.send(req.user);
     //res.send("you reached the redirect URI");
   });

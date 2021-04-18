@@ -68,7 +68,7 @@ exports.findAllProducts= async (req,res)=>{
     try{
         const myAggregate = productModel.aggregate(aggregate_options);
         const result = await productModel.aggregatePaginate(myAggregate, options);
-        res.setHeader('Content-Range', `products ${offset}-${end}/${result.totalResults}`)
+        res.setHeader('Content-Range',`products ${offset}-${end}/${result.totalResults}`)
         return res.send(result.products)
        // return res.json({error:false,message:"success",products:result.products})
     }
@@ -96,7 +96,8 @@ exports.addOneProduct=async (req,res)=>{
        // console.log(req.body);
         let product=await productModel.create(req.body);
         const response = await productModel.updateOne({_id: product._id },{id:product._id});//add id to document(for react admin)
-        return res.send({...product,id:product._id})
+        product.id=product._id
+        return res.send(product)
         // return res.json({error:false,message:"Product Added successfully",product:product})
     }
     catch(err){
